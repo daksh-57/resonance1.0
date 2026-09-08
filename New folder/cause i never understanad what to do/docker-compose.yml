@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: reconcileai-postgres
+    environment:
+      POSTGRES_USER: reconcile
+      POSTGRES_PASSWORD: reconcile
+      POSTGRES_DB: reconcile
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reconcile -d reconcile"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build: .
+    container_name: reconcileai-api
+    ports:
+      - "4000:4000"
+    environment:
+      DATABASE_URL: postgres://reconcile:reconcile@postgres:5432/reconcile
+      SESSION_SECRET: ${SESSION_SECRET:-change-me-in-production}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:5173}
+      NODE_ENV: production
+      STORAGE_DIR: /app/storage
+    volumes:
+      - storage:/app/storage
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: ["node", "apps/api/dist/index.js"]
+
+volumes:
+  pgdata:
+  storage:

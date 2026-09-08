@@ -1,0 +1,43 @@
+{
+  "name": "@reconcile/api",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "worker": "tsx watch src/worker.ts",
+    "build": "node esbuild.mjs",
+    "start": "node dist/index.js",
+    "worker:start": "node dist/worker.js",
+    "migrate": "tsx src/db/migrate.ts",
+    "generate": "drizzle-kit generate",
+    "seed": "tsx src/seed/index.ts",
+    "test": "vitest run --dir test"
+  },
+  "dependencies": {
+    "@reconcile/engine": "*",
+    "@reconcile/shared": "*",
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.44.1",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.1.0",
+    "multer": "^2.0.1",
+    "papaparse": "^5.5.2",
+    "pino": "^9.6.0",
+    "postgres": "^3.4.5",
+    "xlsx": "^0.18.5",
+    "zod": "^3.24"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.8",
+    "@types/express": "^5.0.1",
+    "@types/multer": "^2.0.0",
+    "@types/papaparse": "^5.3.15",
+    "@types/supertest": "^6.0.3",
+    "drizzle-kit": "^0.31.1",
+    "supertest": "^7.1.0"
+  }
+}
