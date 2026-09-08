@@ -36,7 +36,7 @@ import {
   users,
 } from "./db/schema.ts";
 import { enqueueJob, loadSettings, processNextJob, rebuildOrg, runImportAndReconcile } from "./jobs/processor.ts";
-import { audit } from "./lib/audit.ts";
+import { audit, notify } from "./lib/audit.ts";
 import { encryptSecret, randomToken, sha256 } from "./lib/crypto.ts";
 import { parseUpload } from "./lib/parse.ts";
 import { saveUpload } from "./lib/storage.ts";
@@ -529,6 +529,12 @@ export function createApp() {
       entityType: "dataset",
       entityId: ds.id,
       metadata: { name: ds.name },
+    });
+    await notify({
+      organizationId: orgId,
+      type: "dataset_deleted",
+      title: "Dataset deleted",
+      body: `"${ds.name}" and its files were removed.`,
     });
     res.json({ ok: true });
   });
